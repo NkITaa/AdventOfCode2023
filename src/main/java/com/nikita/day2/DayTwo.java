@@ -1,4 +1,4 @@
-package com.nikita.day1;
+package com.nikita.day2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
