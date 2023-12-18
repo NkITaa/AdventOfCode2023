@@ -52,6 +52,7 @@ public class DaySeventeen {
         while (!orderedBlocks.isEmpty()) {
 
             Block block = orderedBlocks.poll();
+            System.out.println(block.x + "," + block.y + " " + block.cost + " " + block.direction + " " + block.lenDirection);
 
             if (block.y == height - 1 && block.x == width - 1) {
 
@@ -136,7 +137,7 @@ public class DaySeventeen {
 
         int leavingLen = oldBlock.direction == nextDirection ? oldBlock.lenDirection + 1 : 1;
         // toggle for day one & two
-        if (!visited(x, y, oldBlock, path) || oldBlock.direction == nextDirection && oldBlock.lenDirection == 3)
+        if (!moreEfficient(x, y, oldBlock, path) || !isValidMin(nextDirection, oldBlock) || !isValidMax(nextDirection, oldBlock))
             return null;
         else {
             if (path[oldBlock.y][oldBlock.x].leavers.get(nextDirection) > leavingLen) {
@@ -148,16 +149,33 @@ public class DaySeventeen {
         return null;
     }
 
-    private boolean visited(int x, int y, Block oldBlock, Path[][] path) {
+    private boolean isValidMax(char nextDirection, Block oldBlock) {
+
+        if (oldBlock.direction == nextDirection) {
+            return oldBlock.lenDirection < 10;
+        }
+        return true;
+    }
+
+    private boolean isValidMin(char nextDirection, Block oldBlock) {
+        if (nextDirection != oldBlock.direction) {
+            if (oldBlock.lenDirection >= 4)
+                return true;
+            return oldBlock.direction == '.';
+        }
+        return true;
+    }
+
+    private boolean moreEfficient(int x, int y, Block oldBlock, Path[][] path) {
 
         if (oldBlock.direction == '>')
-            return path[y][x].leavers.get('v') >= 1 || path[y][x].leavers.get('^') >= 1 || path[y][x].leavers.get('>') >= oldBlock.lenDirection + 1;
+            return path[y][x].leavers.get('v') > 1 || path[y][x].leavers.get('^') > 1 || path[y][x].leavers.get('>') > oldBlock.lenDirection;
         else if (oldBlock.direction == '<')
-            return path[y][x].leavers.get('v') >= 1 || path[y][x].leavers.get('^') >= 1 || path[y][x].leavers.get('<') >= oldBlock.lenDirection + 1;
+            return path[y][x].leavers.get('v') > 1 || path[y][x].leavers.get('^') > 1 || path[y][x].leavers.get('<') > oldBlock.lenDirection;
         else if (oldBlock.direction == 'v')
-            return path[y][x].leavers.get('<') >= 1 || path[y][x].leavers.get('>') >= 1 || path[y][x].leavers.get('v') >= oldBlock.lenDirection + 1;
+            return path[y][x].leavers.get('<') > 1 || path[y][x].leavers.get('>') > 1 || path[y][x].leavers.get('v') > oldBlock.lenDirection;
         else if (oldBlock.direction == '^')
-            return path[y][x].leavers.get('<') >= 1 || path[y][x].leavers.get('>') >= 1 || path[y][x].leavers.get('^') >= oldBlock.lenDirection + 1;
+            return path[y][x].leavers.get('<') > 1 || path[y][x].leavers.get('>') > 1 || path[y][x].leavers.get('^') > oldBlock.lenDirection;
         else return oldBlock.direction == '.';
     }
 
